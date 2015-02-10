@@ -1,0 +1,8 @@
+name: UsernameHistory
+main: com.spinalcraft.usernamehistory.UsernameHistory
+version: 1.0
+
+commands:
+  original:
+    description: Get list of former known usernames for [player]
+    usage: Usage - /original [player]
