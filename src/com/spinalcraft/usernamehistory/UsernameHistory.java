@@ -22,11 +22,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-class PlayerID{
-	String uuid;
-	String name;
-}
-
 class OldUsername{
 	String name;
 	long changedToAt;
@@ -52,42 +47,55 @@ public class UsernameHistory extends JavaPlugin implements Listener{
 	public boolean onCommand(CommandSender sender, Command cmd, String label,
 			String[] args) {
 		if (cmd.getName().equalsIgnoreCase("original")) {
-			String uuid, username;
 			if(args.length == 0)
 				return false;
-			username = args[0];
-			Player player = Bukkit.getPlayer(username);
-			if(player != null)
-				uuid = player.getUniqueId().toString();
-			else
-				try {
-					uuid = UUIDFetcher.getUUIDOf(username).toString();
-				} catch (Exception e) {
-					sender.sendMessage("");
-					sender.sendMessage(code(Color.RED) + "Player could not be found!");
-					return true;
-				}
-				
-			ArrayList<OldUsername> names = usernames(uuid, username);
-			sender.sendMessage("");
-			if(names.size() == 1)
-				sender.sendMessage(code(Color.GREEN) + username + code(Color.GOLD) + " has never changed their name.");
-			else{
-				sender.sendMessage(code(Color.GOLD) + "Originally " + code(Color.GREEN) + names.get(0).name);
-				sender.sendMessage("");
-				
-				for(int i = 1; i < names.size(); i++){
-					DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-					Date date = new Date(names.get(i).changedToAt);
-					String formattedDate = df.format(date);
-					sender.sendMessage(code(Color.BLUE) + formattedDate + code(Color.GOLD) + " - changed to " + code(Color.GREEN) +  names.get(i).name);
-				}
-			}
+			getHistoryAsync(sender, args[0]);
 			return true;
 		}
 		return false;
 	}
+
+	private void getHistoryAsync(final CommandSender sender,
+			final String username) {
+		
+		new Thread() {
+			public void run() {
+				String uuid;
+				Player player = Bukkit.getPlayer(username);
+				if (player != null)
+					uuid = player.getUniqueId().toString();
+				else
+					try {
+						uuid = UUIDFetcher.getUUIDOf(username).toString();
+					} catch (Exception e) {
+						sender.sendMessage("");
+						sender.sendMessage(code(Color.RED)
+								+ "Player could not be found!");
+						return;
+					}
+				ArrayList<OldUsername> names = usernames(uuid, username);
+				reportHistory(sender, names);
+			}
+		}.start();
+	}
 	
+	private void reportHistory(CommandSender sender, ArrayList<OldUsername> names){
+		sender.sendMessage("");
+		if(names.size() == 1)
+			sender.sendMessage(code(Color.GREEN) + names.get(0) + code(Color.GOLD) + " has never changed their name.");
+		else{
+			sender.sendMessage(code(Color.GOLD) + "Originally " + code(Color.GREEN) + names.get(0).name);
+			sender.sendMessage("");
+			
+			for(int i = 1; i < names.size(); i++){
+				DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+				Date date = new Date(names.get(i).changedToAt);
+				String formattedDate = df.format(date);
+				sender.sendMessage(code(Color.BLUE) + formattedDate + code(Color.GOLD) + " - changed to " + code(Color.GREEN) +  names.get(i).name);
+			}
+		}
+	}
+
 	private ArrayList<OldUsername> usernames(String uuid, String current){
 		ArrayList<OldUsername> nameList = new ArrayList<OldUsername>();
 		Gson gson = new GsonBuilder().create();
