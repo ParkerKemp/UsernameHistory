@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="build" name="Build Jar for Project UsernameHistory">
+    <target name="build">
+        <jar destfile="UsernameHistory.jar" filesetmanifest="mergewithoutmain">
+            <fileset dir="bin"/>
+			<fileset file="plugin.yml"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/gson-2.3.1.jar"/>
+        </jar>
+    </target>
+</project>
