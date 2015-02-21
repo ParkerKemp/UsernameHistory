@@ -39,6 +39,8 @@ public class UUIDFetcher {
 		FetchedUuid[] id = gson.fromJson(
 				new InputStreamReader(connection.getInputStream()),
 				FetchedUuid[].class);
+		if(id.length == 0)
+			return null;
 		uuid = UUIDFetcher.getUUID(id[0].id);
 		return uuid;
 	}
