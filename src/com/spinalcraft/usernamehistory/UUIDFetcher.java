@@ -18,19 +18,17 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.*;
 
+import org.bukkit.Bukkit;
+
 class FetchedUuid {
 	String id;
 }
 
 public class UUIDFetcher {
 	private static final String PROFILE_URL = "https://api.mojang.com/profiles/minecraft";
-	private final String name;
-
-	public UUIDFetcher(String name) {
-		this.name = name;
-	}
-
-	public UUID fetch() throws IOException {
+	private static HashMap<String, String> cache = new HashMap<String, String>();
+	
+	public static String fetch(String name) throws IOException {
 		Gson gson = new GsonBuilder().create();
 		UUID uuid = null;
 		HttpURLConnection connection = createConnection();
@@ -42,7 +40,8 @@ public class UUIDFetcher {
 		if(id.length == 0)
 			return null;
 		uuid = UUIDFetcher.getUUID(id[0].id);
-		return uuid;
+		cache.put(name.toLowerCase(), uuid.toString());
+		return uuid.toString();
 	}
 
 	private static void writeBody(HttpURLConnection connection, String body)
@@ -88,7 +87,10 @@ public class UUIDFetcher {
 		return new UUID(mostSignificant, leastSignificant);
 	}
 
-	public static UUID getUUIDOf(String name) throws IOException {
-		return new UUIDFetcher(name).fetch();
+	public static String getUUIDOf(String name) throws IOException {
+		String uuid = cache.get(name.toLowerCase());
+		if(uuid == null)
+			uuid = fetch(name);
+		return uuid;
 	}
 }

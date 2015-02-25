@@ -81,11 +81,10 @@ public class UHPlugin extends JavaPlugin implements Listener {
 
 	private void reportHistory(CommandSender sender, String username) {
 		History history = cache.getFromUsername(username.toLowerCase());
-		if (history != null) {
+		if (history != null)
 			printHistory(sender, history);
-		} else {
+		else
 			reportWebHistoryAsync(sender, username);
-		}
 	}
 	
 	//For external use; does not fork
@@ -107,11 +106,10 @@ public class UHPlugin extends JavaPlugin implements Listener {
 	}
 
 	private static History getHistoryFromWeb(String username) {
-		UUID uuid;
-		String uuidString;
+		String uuid;
 		Player player = Bukkit.getPlayer(username);
 		if (player != null)
-			uuidString = player.getUniqueId().toString();
+			uuid = player.getUniqueId().toString();
 		else {
 			try {
 				uuid = UUIDFetcher.getUUIDOf(username);
@@ -119,12 +117,10 @@ public class UHPlugin extends JavaPlugin implements Listener {
 				e.printStackTrace();
 				return null;
 			}
-			if (uuid != null)
-				uuidString = uuid.toString();
-			else
+			if (uuid == null)
 				return null;
 		}
-		History history = webHistoryFromUuid(uuidString);
+		History history = webHistoryFromUuid(uuid);
 		cache.putWithUsername(username.toLowerCase(), history);
 		return history;
 	}
