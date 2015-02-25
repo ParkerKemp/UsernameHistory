@@ -26,7 +26,7 @@ import com.google.gson.GsonBuilder;
 
 class SessionCache{
 	private HashMap<String, History> usernameCache = new HashMap<String, History>();
-	private HashMap<String, History> uuidCache = new HashMap<String, History>();
+	private HashMap<UUID, History> uuidCache = new HashMap<UUID, History>();
 	
 	public SessionCache(){
 		
@@ -36,7 +36,7 @@ class SessionCache{
 		return usernameCache.get(username.toLowerCase());
 	}
 	
-	public History getFromUuid(String uuid){
+	public History getFromUuid(UUID uuid){
 		return uuidCache.get(uuid);
 	}
 	
@@ -44,7 +44,7 @@ class SessionCache{
 		usernameCache.put(username.toLowerCase(), history);
 	}
 	
-	public void putWithUuid(String uuid, History history){
+	public void putWithUuid(UUID uuid, History history){
 		uuidCache.put(uuid, history);
 	}
 }
@@ -97,7 +97,7 @@ public class UHPlugin extends JavaPlugin implements Listener {
 	}
 	
 	//For external use; does not fork
-	public static History getHistoryFromUuid(String uuid){
+	public static History getHistoryFromUuid(UUID uuid){
 		History history = cache.getFromUuid(uuid);
 		if(history != null)
 			return history;
@@ -106,10 +106,10 @@ public class UHPlugin extends JavaPlugin implements Listener {
 	}
 
 	private static History getHistoryFromWeb(String username) {
-		String uuid;
+		UUID uuid;
 		Player player = Bukkit.getPlayer(username);
 		if (player != null)
-			uuid = player.getUniqueId().toString();
+			uuid = player.getUniqueId();
 		else {
 			try {
 				uuid = UUIDFetcher.getUUIDOf(username);
@@ -160,9 +160,9 @@ public class UHPlugin extends JavaPlugin implements Listener {
 		}
 	}
 	
-	private static History webHistoryFromUuid(String uuid){
+	private static History webHistoryFromUuid(UUID uuid){
 		Gson gson = new GsonBuilder().create();
-		String compactUuid = uuid.replace("-", "");
+		String compactUuid = uuid.toString().replace("-", "");
 		try {
 			URL url = new URL("https://api.mojang.com/user/profiles/"
 					+ compactUuid + "/names");
@@ -173,6 +173,8 @@ public class UHPlugin extends JavaPlugin implements Listener {
 			OldUsername[] oldNames = gson.fromJson(reader, OldUsername[].class);
 			reader.close();
 			conn.disconnect();
+			History history = new History(uuid, oldNames);
+			cache.putWithUuid(uuid, history);
 			return new History(uuid, oldNames);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
