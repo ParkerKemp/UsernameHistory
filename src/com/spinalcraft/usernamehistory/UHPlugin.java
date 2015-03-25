@@ -130,7 +130,6 @@ public class UHPlugin extends JavaPlugin implements Listener {
 			public void run() {
 				History history = getHistoryFromWeb(username);
 				if(history == null){
-					sender.sendMessage("");
 					sender.sendMessage(ChatColor.RED + "Player could not be found!");
 					return;
 				}
@@ -140,22 +139,16 @@ public class UHPlugin extends JavaPlugin implements Listener {
 	}
 
 	private void printHistory(CommandSender sender, History history) {
-		sender.sendMessage("");
 		if (history.oldNames.length == 1)
-			sender.sendMessage(ChatColor.GREEN + history.oldNames[0].name + ChatColor.GOLD
-					+ " has never changed their name.");
+			sender.sendMessage(ChatColor.GRAY + history.oldNames[0].name + ChatColor.GOLD + " has never changed their name.");
 		else {
-			sender.sendMessage(ChatColor.GOLD + "Originally " + ChatColor.GREEN
-					+ history.oldNames[0].name);
-			sender.sendMessage("");
+			sender.sendMessage(ChatColor.GOLD + "Original name: " + ChatColor.GRAY + history.oldNames[0].name);
 
 			for (int i = 1; i < history.oldNames.length; i++) {
-				DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+				DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				Date date = new Date(history.oldNames[i].changedToAt);
 				String formattedDate = df.format(date);
-				sender.sendMessage(ChatColor.BLUE + formattedDate
-						+ ChatColor.GOLD + " - changed to " + ChatColor.GREEN
-						+ history.oldNames[i].name);
+				sender.sendMessage(ChatColor.GRAY + formattedDate + ChatColor.GOLD + " changed to " + ChatColor.GRAY +  history.oldNames[i].name);
 			}
 		}
 	}
