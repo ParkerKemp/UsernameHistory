@@ -148,7 +148,7 @@ public class UHPlugin extends JavaPlugin implements Listener {
 				DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				Date date = new Date(history.oldNames[i].changedToAt);
 				String formattedDate = df.format(date);
-				sender.sendMessage(ChatColor.GRAY + formattedDate + ": " + ChatColor.GOLD + "changed to " + ChatColor.GRAY +  history.oldNames[i].name);
+				sender.sendMessage(ChatColor.GRAY + formattedDate + ChatColor.GOLD + " changed to " + ChatColor.GRAY +  history.oldNames[i].name);
 			}
 		}
 	}
