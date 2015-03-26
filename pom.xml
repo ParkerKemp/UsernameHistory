@@ -7,7 +7,7 @@
   <version>1.0</version>
   <packaging>jar</packaging>
   <name>UsernameHistory</name>
-  <url>https://github.com/CoreNetwork/UsernameHistory</url>
+  <url>https://github.com/ParkerKemp/UsernameHistory</url>
 
   <build>
 		<finalName>UsernameHistory</finalName>

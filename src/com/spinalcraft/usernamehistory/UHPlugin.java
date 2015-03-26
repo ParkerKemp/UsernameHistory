@@ -140,7 +140,7 @@ public class UHPlugin extends JavaPlugin implements Listener {
 
 	private void printHistory(CommandSender sender, History history) {
 		if (history.oldNames.length == 1)
-			sender.sendMessage(ChatColor.GRAY + history.oldNames[0].name + ChatColor.GOLD + " has never changed their name.");
+			sender.sendMessage(ChatColor.GREEN + history.oldNames[0].name + ChatColor.GOLD + " has never changed their name.");
 		else {
 			sender.sendMessage(ChatColor.GOLD + "Original name: " + ChatColor.GRAY + history.oldNames[0].name);
 
@@ -148,7 +148,7 @@ public class UHPlugin extends JavaPlugin implements Listener {
 				DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				Date date = new Date(history.oldNames[i].changedToAt);
 				String formattedDate = df.format(date);
-				sender.sendMessage(ChatColor.GRAY + formattedDate + ChatColor.GOLD + " changed to " + ChatColor.GRAY +  history.oldNames[i].name);
+				sender.sendMessage(ChatColor.BLUE + formattedDate + ChatColor.GOLD + " changed to " + ChatColor.GREEN +  history.oldNames[i].name);
 			}
 		}
 	}
