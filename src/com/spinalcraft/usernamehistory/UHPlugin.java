@@ -124,6 +124,7 @@ public class UHPlugin extends JavaPlugin implements Listener {
 			return webHistoryFromUuid(uuid);
 	}
 
+	@SuppressWarnings("deprecation")
 	private static History getHistoryFromWeb(String username) {
 		UUID uuid;
 		Player player = Bukkit.getPlayer(username);
