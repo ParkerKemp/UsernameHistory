@@ -5,7 +5,7 @@
   <artifactId>UsernameHistory</artifactId>
   <name>UsernameHistory</name>
   <version>1.0</version>
-  <url>https://github.com/CoreNetwork/UsernameHistory</url>
+  <url>https://github.com/ParkerKemp/UsernameHistory</url>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <resources>

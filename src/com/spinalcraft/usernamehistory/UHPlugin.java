@@ -162,7 +162,7 @@ public class UHPlugin extends JavaPlugin implements Listener {
 		if (history.oldNames.length == 1)
 			sender.sendMessage(ChatColor.GREEN + history.oldNames[0].name + ChatColor.GOLD + " has never changed their name.");
 		else {
-			sender.sendMessage(ChatColor.GOLD + "Original name: " + ChatColor.GRAY + history.oldNames[0].name);
+			sender.sendMessage(ChatColor.GOLD + "Original name: " + ChatColor.GREEN + history.oldNames[0].name);
 
 			for (int i = 1; i < history.oldNames.length; i++) {
 				DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

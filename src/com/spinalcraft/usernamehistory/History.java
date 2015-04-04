@@ -32,4 +32,12 @@ public class History{
 		this.oldNames = oldNames;
 		Arrays.sort(this.oldNames);
 	}
+	
+	public UUID getUuid(){
+		return uuid;
+	}
+	
+	public OldUsername[] getOldUsernames(){
+		return oldNames;
+	}
 }

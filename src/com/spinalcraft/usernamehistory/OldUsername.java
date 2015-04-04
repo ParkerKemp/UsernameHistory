@@ -26,4 +26,12 @@ public class OldUsername implements Comparable<OldUsername> {
 	public int compareTo(OldUsername other) {
 		return Long.compare(this.changedToAt, other.changedToAt);
 	}
+	
+	public String getName(){
+		return name;
+	}
+	
+	public long getTimeChanged(){
+		return changedToAt;
+	}
 }
