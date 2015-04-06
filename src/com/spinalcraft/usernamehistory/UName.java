@@ -19,11 +19,11 @@
 
 package com.spinalcraft.usernamehistory;
 
-public class OldUsername implements Comparable<OldUsername> {
+public class UName implements Comparable<UName> {
 	String name;
 	long changedToAt;
 
-	public int compareTo(OldUsername other) {
+	public int compareTo(UName other) {
 		return Long.compare(this.changedToAt, other.changedToAt);
 	}
 	

@@ -22,12 +22,12 @@ package com.spinalcraft.usernamehistory;
 import java.util.Arrays;
 import java.util.UUID;
 
-public class History{
+public class UHistory{
 	UUID uuid;
 	
-	OldUsername[] oldNames;
+	UName[] oldNames;
 	
-	public History(UUID uuid, OldUsername[] oldNames){
+	public UHistory(UUID uuid, UName[] oldNames){
 		this.uuid = uuid;
 		this.oldNames = oldNames;
 		Arrays.sort(this.oldNames);
@@ -37,7 +37,7 @@ public class History{
 		return uuid;
 	}
 	
-	public OldUsername[] getOldUsernames(){
+	public UName[] getOldUsernames(){
 		return oldNames;
 	}
 }

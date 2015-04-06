@@ -37,38 +37,37 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 class SessionCache{
-	private HashMap<String, History> usernameCache = new HashMap<String, History>();
-	private HashMap<UUID, History> uuidCache = new HashMap<UUID, History>();
+	private HashMap<String, UHistory> usernameCache = new HashMap<String, UHistory>();
+	private HashMap<UUID, UHistory> uuidCache = new HashMap<UUID, UHistory>();
 	
 	public SessionCache(){
 		
 	}
 	
-	public History getFromUsername(String username){
+	public UHistory getFromUsername(String username){
 		return usernameCache.get(username.toLowerCase());
 	}
 	
-	public History getFromUuid(UUID uuid){
+	public UHistory getFromUuid(UUID uuid){
 		return uuidCache.get(uuid);
 	}
 	
-	public void putWithUsername(String username, History history){
+	public void putWithUsername(String username, UHistory history){
 		usernameCache.put(username.toLowerCase(), history);
 	}
 	
-	public void putWithUuid(UUID uuid, History history){
+	public void putWithUuid(UUID uuid, UHistory history){
 		uuidCache.put(uuid, history);
 	}
 }
 
-public class UHPlugin extends JavaPlugin implements Listener {
+public class UsernameHistory extends JavaPlugin {
 	ConsoleCommandSender console;
 
 	private static SessionCache cache = new SessionCache();
@@ -78,8 +77,6 @@ public class UHPlugin extends JavaPlugin implements Listener {
 		console = Bukkit.getConsoleSender();
 
 		console.sendMessage(ChatColor.BLUE + "UsernameHistory online!");
-
-		getServer().getPluginManager().registerEvents((Listener) this, this);
 	}
 
 	@Override
@@ -99,7 +96,7 @@ public class UHPlugin extends JavaPlugin implements Listener {
 	}
 
 	private void reportHistory(CommandSender sender, String username) {
-		History history = cache.getFromUsername(username.toLowerCase());
+		UHistory history = cache.getFromUsername(username.toLowerCase());
 		if (history != null)
 			printHistory(sender, history);
 		else
@@ -107,8 +104,8 @@ public class UHPlugin extends JavaPlugin implements Listener {
 	}
 	
 	//For external use; does not fork
-	public static History getHistoryFromUsername(String username){
-		History history = cache.getFromUsername(username.toLowerCase());
+	public static UHistory getHistoryFromUsername(String username){
+		UHistory history = cache.getFromUsername(username.toLowerCase());
 		if(history != null)
 			return history;
 		else
@@ -116,8 +113,8 @@ public class UHPlugin extends JavaPlugin implements Listener {
 	}
 	
 	//For external use; does not fork
-	public static History getHistoryFromUuid(UUID uuid){
-		History history = cache.getFromUuid(uuid);
+	public static UHistory getHistoryFromUuid(UUID uuid){
+		UHistory history = cache.getFromUuid(uuid);
 		if(history != null)
 			return history;
 		else
@@ -125,7 +122,7 @@ public class UHPlugin extends JavaPlugin implements Listener {
 	}
 
 	@SuppressWarnings("deprecation")
-	private static History getHistoryFromWeb(String username) {
+	private static UHistory getHistoryFromWeb(String username) {
 		UUID uuid;
 		Player player = Bukkit.getPlayer(username);
 		if (player != null)
@@ -140,7 +137,7 @@ public class UHPlugin extends JavaPlugin implements Listener {
 			if (uuid == null)
 				return null;
 		}
-		History history = webHistoryFromUuid(uuid);
+		UHistory history = webHistoryFromUuid(uuid);
 		cache.putWithUsername(username.toLowerCase(), history);
 		return history;
 	}
@@ -148,7 +145,7 @@ public class UHPlugin extends JavaPlugin implements Listener {
 	private void reportWebHistoryAsync(final CommandSender sender, final String username){
 		new Thread() {
 			public void run() {
-				History history = getHistoryFromWeb(username);
+				UHistory history = getHistoryFromWeb(username);
 				if(history == null){
 					sender.sendMessage(ChatColor.RED + "Player could not be found!");
 					return;
@@ -158,7 +155,7 @@ public class UHPlugin extends JavaPlugin implements Listener {
 		}.start();
 	}
 
-	private void printHistory(CommandSender sender, History history) {
+	private void printHistory(CommandSender sender, UHistory history) {
 		if (history.oldNames.length == 1)
 			sender.sendMessage(ChatColor.GREEN + history.oldNames[0].name + ChatColor.GOLD + " has never changed their name.");
 		else {
@@ -173,7 +170,7 @@ public class UHPlugin extends JavaPlugin implements Listener {
 		}
 	}
 	
-	private static History webHistoryFromUuid(UUID uuid){
+	private static UHistory webHistoryFromUuid(UUID uuid){
 		Gson gson = new GsonBuilder().create();
 		String compactUuid = uuid.toString().replace("-", "");
 		try {
@@ -183,18 +180,17 @@ public class UHPlugin extends JavaPlugin implements Listener {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					conn.getInputStream()));
 
-			OldUsername[] oldNames = gson.fromJson(reader, OldUsername[].class);
+			UName[] oldNames = gson.fromJson(reader, UName[].class);
 			reader.close();
 			conn.disconnect();
-			History history = new History(uuid, oldNames);
+			UHistory history = new UHistory(uuid, oldNames);
 			cache.putWithUuid(uuid, history);
-			return new History(uuid, oldNames);
+			return new UHistory(uuid, oldNames);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		return null;
 	}
 }
