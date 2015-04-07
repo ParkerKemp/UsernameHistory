@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   
-  <groupId>UsernameHistory</groupId>
+  <groupId>com.spinalcraft</groupId>
   <artifactId>UsernameHistory</artifactId>
   <version>1.0</version>
   <packaging>jar</packaging>
@@ -54,6 +54,13 @@
 				</executions>
 			</plugin>
 		</plugins>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh</artifactId>
+				<version>1.0</version>
+			</extension>
+		</extensions>
 	</build>
   
   <repositories>
@@ -86,5 +93,13 @@
     </dependency>
 
   </dependencies>
-
+	<distributionManagement>
+		<repository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>spinalcraft</id>
+			<name>Spinalcraft Repository</name>
+			<url>sftp://maven.spinalcraft.com/var/www/maven</url>
+			<layout>default</layout>
+		</repository>
+	</distributionManagement>
 </project>

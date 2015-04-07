@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>UsernameHistory</groupId>
+  <groupId>com.spinalcraft</groupId>
   <artifactId>UsernameHistory</artifactId>
   <name>UsernameHistory</name>
   <version>1.0</version>
   <url>https://github.com/ParkerKemp/UsernameHistory</url>
   <build>
     <sourceDirectory>src</sourceDirectory>
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-ssh</artifactId>
+        <version>1.0</version>
+      </extension>
+    </extensions>
     <resources>
       <resource>
         <filtering>true</filtering>
@@ -92,5 +99,13 @@
       </exclusions>
     </dependency>
   </dependencies>
+  <distributionManagement>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>spinalcraft</id>
+      <name>Spinalcraft Repository</name>
+      <url>sftp://maven.spinalcraft.com/var/www/maven</url>
+    </repository>
+  </distributionManagement>
 </project>
 
