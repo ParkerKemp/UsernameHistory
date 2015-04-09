@@ -56,6 +56,13 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.10.2</version>
+        <configuration>
+          <nodeprecated>true</nodeprecated>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <repositories>

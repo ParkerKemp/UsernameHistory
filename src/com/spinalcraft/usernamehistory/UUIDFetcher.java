@@ -30,18 +30,22 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.ByteBuffer;
 import java.util.*;
 
 class FetchedUuid {
 	String id;
 }
 
+/**
+ * UUIDFetcher retrieves UUIDs from usernames via web requests to Mojang.
+ * @author Parker Kemp
+ *
+ */
 public class UUIDFetcher {
 	private static final String PROFILE_URL = "https://api.mojang.com/profiles/minecraft";
 	private static HashMap<String, UUID> cache = new HashMap<String, UUID>();
 	
-	public static UUID fetch(String name) throws IOException {
+	private static UUID fetch(String name) throws IOException {
 		Gson gson = new GsonBuilder().create();
 		UUID uuid = null;
 		HttpURLConnection connection = createConnection();
@@ -82,24 +86,17 @@ public class UUIDFetcher {
 				+ id.substring(20, 32));
 	}
 
-	public static byte[] toBytes(UUID uuid) {
-		ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
-		byteBuffer.putLong(uuid.getMostSignificantBits());
-		byteBuffer.putLong(uuid.getLeastSignificantBits());
-		return byteBuffer.array();
-	}
-
-	public static UUID fromBytes(byte[] array) {
-		if (array.length != 16) {
-			throw new IllegalArgumentException("Illegal byte array length: "
-					+ array.length);
-		}
-		ByteBuffer byteBuffer = ByteBuffer.wrap(array);
-		long mostSignificant = byteBuffer.getLong();
-		long leastSignificant = byteBuffer.getLong();
-		return new UUID(mostSignificant, leastSignificant);
-	}
-
+	/**
+	 * Returns the UUID of a player based on their current username.
+	 * Results are cached locally (per session) to reduce web traffic.
+	 * <p>
+	 * <p>
+	 * This method may make a synchronous web request. It is highly recommended to
+	 * avoid running this on the main thread.
+	 * @param name The username (case insensitive) to search
+	 * @return The UUID of the given player, or null if player not found.
+	 * @throws IOException
+	 */
 	public static UUID getUUIDOf(String name) throws IOException {
 		UUID uuid = cache.get(name.toLowerCase());
 		if(uuid == null)

@@ -22,10 +22,15 @@ package com.spinalcraft.usernamehistory;
 import java.util.Arrays;
 import java.util.UUID;
 
+/**
+ * UHistory contains a list of {@link UName}, where each UName is a prior (or current) name
+ * of a certain player.
+ * @author Parker Kemp
+ */
 public class UHistory{
-	UUID uuid;
+	private UUID uuid;
 	
-	UName[] oldNames;
+	private UName[] oldNames;
 	
 	public UHistory(UUID uuid, UName[] oldNames){
 		this.uuid = uuid;
@@ -33,10 +38,18 @@ public class UHistory{
 		Arrays.sort(this.oldNames);
 	}
 	
+	/**
+	 * @return The UUID of the player
+	 */
 	public UUID getUuid(){
 		return uuid;
 	}
 	
+	/**
+	 * Returns an array containing the player's username history in chronological order, where
+	 * index 0 is their first (original) username.
+	 * @return The player's username history.
+	 */
 	public UName[] getOldUsernames(){
 		return oldNames;
 	}

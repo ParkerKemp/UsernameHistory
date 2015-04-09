@@ -103,7 +103,17 @@ public class UsernameHistory extends JavaPlugin {
 			reportWebHistoryAsync(sender, username);
 	}
 	
-	//For external use; does not fork
+	/**
+	 * Returns a {@link UHistory} object containing a list of prior names for a player.
+	 * Results are cached locally (per session) to reduce web traffic.
+	 * <p>
+	 * <p>
+	 * This method may make a synchronous web request. It is highly recommended to
+	 * avoid running this on the main thread.
+	 * @param username The username of the player
+	 * @return The UHistory of the specified player, or null if player not found.
+	 * @see #getHistoryFromUuid(UUID)
+	 */
 	public static UHistory getHistoryFromUsername(String username){
 		UHistory history = cache.getFromUsername(username.toLowerCase());
 		if(history != null)
@@ -112,7 +122,18 @@ public class UsernameHistory extends JavaPlugin {
 			return getHistoryFromWeb(username);
 	}
 	
-	//For external use; does not fork
+	/**
+	 * Returns a {@link UHistory} object containing a list of prior names for a player.
+	 * Results are cached locally (per session) to reduce web traffic.
+	 * <p>
+	 * <p>
+	 * This method may make a synchronous web request. It is highly recommended to
+	 * avoid running this on the main thread.
+	 * @param uuid The UUID of the player
+	 * @return The UHistory of the specified player, or null if player not found.
+	 * @see #getHistoryFromUsername(String)
+	 * @see UUIDFetcher
+	 */
 	public static UHistory getHistoryFromUuid(UUID uuid){
 		UHistory history = cache.getFromUuid(uuid);
 		if(history != null)
@@ -156,16 +177,17 @@ public class UsernameHistory extends JavaPlugin {
 	}
 
 	private void printHistory(CommandSender sender, UHistory history) {
-		if (history.oldNames.length == 1)
-			sender.sendMessage(ChatColor.GREEN + history.oldNames[0].name + ChatColor.GOLD + " has never changed their name.");
+		UName[] oldNames = history.getOldUsernames();
+		if (oldNames.length == 1)
+			sender.sendMessage(ChatColor.GREEN + oldNames[0].getName()+ ChatColor.GOLD + " has never changed their name.");
 		else {
-			sender.sendMessage(ChatColor.GOLD + "Original name: " + ChatColor.GREEN + history.oldNames[0].name);
+			sender.sendMessage(ChatColor.GOLD + "Original name: " + ChatColor.GREEN + oldNames[0].getName());
 
-			for (int i = 1; i < history.oldNames.length; i++) {
+			for (int i = 1; i < oldNames.length; i++) {
 				DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				Date date = new Date(history.oldNames[i].changedToAt);
+				Date date = new Date(oldNames[i].getTimeChanged());
 				String formattedDate = df.format(date);
-				sender.sendMessage(ChatColor.BLUE + formattedDate + ChatColor.GOLD + " changed to " + ChatColor.GREEN +  history.oldNames[i].name);
+				sender.sendMessage(ChatColor.BLUE + formattedDate + ChatColor.GOLD + " changed to " + ChatColor.GREEN +  oldNames[i].getName());
 			}
 		}
 	}
@@ -181,6 +203,8 @@ public class UsernameHistory extends JavaPlugin {
 					conn.getInputStream()));
 
 			UName[] oldNames = gson.fromJson(reader, UName[].class);
+			if(oldNames == null)
+				return null;
 			reader.close();
 			conn.disconnect();
 			UHistory history = new UHistory(uuid, oldNames);

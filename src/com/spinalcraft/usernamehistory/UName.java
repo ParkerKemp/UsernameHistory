@@ -19,9 +19,13 @@
 
 package com.spinalcraft.usernamehistory;
 
+/**
+ * UName contains a single username, prior or current, in the user's history, along with the time it was changed.
+ * @author Parker Kemp
+ */
 public class UName implements Comparable<UName> {
-	String name;
-	long changedToAt;
+	private String name;
+	private long changedToAt;
 
 	public int compareTo(UName other) {
 		return Long.compare(this.changedToAt, other.changedToAt);
@@ -31,6 +35,10 @@ public class UName implements Comparable<UName> {
 		return name;
 	}
 	
+	/**
+	 * Returns the UNIX timestamp at which this username was created. For the original username, returns zero.
+	 * @return The time changed.
+	 */
 	public long getTimeChanged(){
 		return changedToAt;
 	}

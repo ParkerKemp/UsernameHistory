@@ -1,5 +1,5 @@
 name: UsernameHistory
-main: com.spinalcraft.usernamehistory.UHPlugin
+main: com.spinalcraft.usernamehistory.UsernameHistory
 version: 1.0
 
 commands:
