@@ -43,14 +43,7 @@
             <configuration>
               <minimizeJar>true</minimizeJar>
               <artifactSet>
-                <excludes>
-                  <exclude>classworlds:classworlds</exclude>
-                  <exclude>junit:junit</exclude>
-                  <exclude>jmock:*</exclude>
-                  <exclude>*:xml-apis</exclude>
-                  <exclude>org.apache.maven:lib:tests</exclude>
-                  <exclude>log4j:log4j:jar:</exclude>
-                </excludes>
+                <excludes />
               </artifactSet>
             </configuration>
           </execution>
@@ -61,6 +54,13 @@
         <version>2.10.2</version>
         <configuration>
           <nodeprecated>true</nodeprecated>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <locales>en,fr</locales>
         </configuration>
       </plugin>
     </plugins>
@@ -106,13 +106,26 @@
       </exclusions>
     </dependency>
   </dependencies>
+  <reporting>
+    <plugins>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.10.2</version>
+        <configuration />
+      </plugin>
+    </plugins>
+  </reporting>
   <distributionManagement>
     <repository>
       <uniqueVersion>false</uniqueVersion>
-      <id>spinalcraft</id>
+      <id>spinalcraft-repo</id>
       <name>Spinalcraft Repository</name>
       <url>sftp://maven.spinalcraft.com/var/www/maven</url>
     </repository>
+    <site>
+      <id>javadocs</id>
+      <url>sftp://mc.spinalcraft.com/var/www/javadoc/usernamehistory</url>
+    </site>
   </distributionManagement>
 </project>
 
