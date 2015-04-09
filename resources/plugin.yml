@@ -4,7 +4,7 @@ version: 1.0
 
 commands:
   original:
-    description: Get list of former known usernames for [player]
-    usage: Usage - /original [player]
+    description: Get list of former known usernames for <player>
+    usage: Usage - /original <player>
     permission: usernamehistory.original
     permission-message: You can't do that!
