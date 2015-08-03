@@ -43,34 +43,28 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 class SessionCache{
-	private HashMap<String, UHistory> usernameCache = new HashMap<String, UHistory>();
-	private HashMap<UUID, UHistory> uuidCache = new HashMap<UUID, UHistory>();
+	private static HashMap<String, UHistory> usernameCache = new HashMap<String, UHistory>();
+	private static HashMap<UUID, UHistory> uuidCache = new HashMap<UUID, UHistory>();
 	
-	public SessionCache(){
-		
-	}
-	
-	public UHistory getFromUsername(String username){
+	public static UHistory getFromUsername(String username){
 		return usernameCache.get(username.toLowerCase());
 	}
 	
-	public UHistory getFromUuid(UUID uuid){
+	public static UHistory getFromUuid(UUID uuid){
 		return uuidCache.get(uuid);
 	}
 	
-	public void putWithUsername(String username, UHistory history){
+	public static void putWithUsername(String username, UHistory history){
 		usernameCache.put(username.toLowerCase(), history);
 	}
 	
-	public void putWithUuid(UUID uuid, UHistory history){
+	public static void putWithUuid(UUID uuid, UHistory history){
 		uuidCache.put(uuid, history);
 	}
 }
 
 public class UsernameHistory extends JavaPlugin {
 	ConsoleCommandSender console;
-
-	private static SessionCache cache = new SessionCache();
 	
 	@Override
 	public void onEnable() {
@@ -96,7 +90,7 @@ public class UsernameHistory extends JavaPlugin {
 	}
 
 	private void reportHistory(CommandSender sender, String username) {
-		UHistory history = cache.getFromUsername(username.toLowerCase());
+		UHistory history = SessionCache.getFromUsername(username.toLowerCase());
 		if (history != null)
 			printHistory(sender, history);
 		else
@@ -115,7 +109,7 @@ public class UsernameHistory extends JavaPlugin {
 	 * @see #getHistoryFromUuid(UUID)
 	 */
 	public static UHistory getHistoryFromUsername(String username){
-		UHistory history = cache.getFromUsername(username.toLowerCase());
+		UHistory history = SessionCache.getFromUsername(username.toLowerCase());
 		if(history != null)
 			return history;
 		else
@@ -135,7 +129,7 @@ public class UsernameHistory extends JavaPlugin {
 	 * @see UUIDFetcher
 	 */
 	public static UHistory getHistoryFromUuid(UUID uuid){
-		UHistory history = cache.getFromUuid(uuid);
+		UHistory history = SessionCache.getFromUuid(uuid);
 		if(history != null)
 			return history;
 		else
@@ -159,7 +153,7 @@ public class UsernameHistory extends JavaPlugin {
 				return null;
 		}
 		UHistory history = webHistoryFromUuid(uuid);
-		cache.putWithUsername(username.toLowerCase(), history);
+		SessionCache.putWithUsername(username.toLowerCase(), history);
 		return history;
 	}
 	
@@ -208,7 +202,7 @@ public class UsernameHistory extends JavaPlugin {
 			reader.close();
 			conn.disconnect();
 			UHistory history = new UHistory(uuid, oldNames);
-			cache.putWithUuid(uuid, history);
+			SessionCache.putWithUuid(uuid, history);
 			return new UHistory(uuid, oldNames);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
