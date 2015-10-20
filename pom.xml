@@ -121,7 +121,7 @@
 		</site>
 		<repository>
 			<uniqueVersion>false</uniqueVersion>
-			<id>spinalcraft-repo</id>
+			<id>spinalcraft</id>
 			<name>Spinalcraft Repository</name>
 			<url>sftp://maven.spinalcraft.com/var/www/maven</url>
 			<layout>default</layout>
